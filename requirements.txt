@@ -6,6 +6,9 @@ bcrypt==3.2.0
 mysql-connector-python==8.3.0
 matplotlib==3.8.3
 sqlalchemy==2.0.28
-python3-dev default-libmysqlclient-dev build-essential pkg-config
+python3-dev 
+default-libmysqlclient-dev 
+build-essential 
+pkg-config
 mysqlclient
 #https://pypi.org/project/mysqlclient/
