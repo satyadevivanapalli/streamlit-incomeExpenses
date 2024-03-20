@@ -13,8 +13,8 @@ import bcrypt
 #     database= "streamlit",
 #     autocommit=True
 # )
-# conn = st.connection('mysql', type='sql', autocommit=True)
-# print(conn,"ccccccccccccc")
+conn = st.connection('mysql', type='sql', autocommit=True)
+print(conn,"ccccccccccccc")
 # # Perform query.
 # df = conn.query('SELECT * from users;', ttl=0)
 # print(df,"ffffffffffffffffffffffffff", df.to_dict())
