@@ -6,10 +6,24 @@ import mysql.connector
 import time
 import bcrypt
 
+# mydb = mysql.connector.connect(
+#     host= "127.0.0.1",
+#     user= "satya",
+#     password= "satya",
+#     database= "streamlit",
+#     autocommit=True
+# )
+conn = st.connection('mysql', type='sql', autocommit=True)
+print(conn,"ccccccccccccc")
+# Perform query.
+df = conn.query('SELECT * from users;', ttl=0)
+print(df,"ffffffffffffffffffffffffff", df.to_dict())
+for row in df.to_dict():
+    print(row,type(row))
 mydb = mysql.connector.connect(
-    host= "127.0.0.1",
-    user= "satya",
-    password= "satya",
+    host= "192.168.0.106",
+    user= "user",
+    password= "password",
     database= "streamlit",
     autocommit=True
 )
