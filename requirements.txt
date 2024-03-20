@@ -10,5 +10,6 @@ sqlalchemy==2.0.28
 # default-libmysqlclient-dev 
 # build-essential 
 # pkg-config
+apt-get install python3-dev default-libmysqlclient-dev build-essential pkg-config
 mysqlclient==2.2.4
 #https://pypi.org/project/mysqlclient/
