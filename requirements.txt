@@ -1,11 +1,11 @@
-streamlit=1.31.1
-streamlit-cookies-manager=0.2.0
-streamlit-login-auth-ui=0.2.0
-streamlit-option-menu=0.3.12
-bcrypt=3.2.0
-mysql-connector-python=8.3.0
-matplotlib=3.8.3
-sqlalchemy=2.0.28
+streamlit==1.31.1
+streamlit-cookies-manager==0.2.0
+streamlit-login-auth-ui==0.2.0
+streamlit-option-menu==0.3.12
+bcrypt==3.2.0
+mysql-connector-python==8.3.0
+matplotlib==3.8.3
+sqlalchemy==2.0.28
 python3-dev default-libmysqlclient-dev build-essential pkg-config
 mysqlclient
 #https://pypi.org/project/mysqlclient/
