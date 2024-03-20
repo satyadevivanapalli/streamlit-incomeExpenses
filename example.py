@@ -52,5 +52,5 @@ import streamlit as st
 # except Exception as e:
 #       st.write(e)
 
-conn = st.connection('mysql', type='sql', autocommit=True)
+conn = st.connection('authentication', type='sql', autocommit=True)
 st.write(conn,"+++++++++++++++++++++++=")
