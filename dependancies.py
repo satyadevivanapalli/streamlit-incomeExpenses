@@ -14,6 +14,7 @@ import bcrypt
 #     autocommit=True
 # )
 conn = st.connection('mysql', type='sql', autocommit=True)
+st.write(conn,"+++++++++++++++++++++++=")
 print(conn,"ccccccccccccc")
 # # Perform query.
 # df = conn.query('SELECT * from users;', ttl=0)
