@@ -12,4 +12,5 @@ sqlalchemy==2.0.28
 # build-essential 
 # pkg-config
 mysqlclient==2.2.4
+pymongo==4.6.2
 #https://pypi.org/project/mysqlclient/

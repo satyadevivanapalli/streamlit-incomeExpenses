@@ -1,6 +1,34 @@
 import sqlite3
 import streamlit as st
-
+from pymongo import MongoClient
+import ssl
+# CONNECTION_STRING = "mongodb+srv://admin:admin@satyacluster.y5zdczt.mongodb.net/streamlit_authentication?retryWrites=true&w=majority"
+# client = MongoClient(CONNECTION_STRING)
+# db = client.streamlit_authentication 
+dbName="example"
+collectionName = "Records"
+client = MongoClient("mongodb+srv://streamlitsatya:WxRuiFAU2qkA2Kea@cluster0.yzn3mx4.mongodb.net/", ssl=True)
+db = client[dbName]
+collection = db[collectionName]
+print(db)
+st.write(collection)
+data = [{
+    'name': 'satya',
+    'email': 'satya@yopmail.com'
+},{
+    'name': 'latha',
+    'email': 'latha@yopmail.com'
+}]
+dataa = collection.insert_many(data)
+st.write(dataa, "Done")
+# Created or Switched to collection names: myTable 
+# collection = db.users 
+  
+# # To find() all the entries inside collection name 'myTable' 
+# cursor = collection.find() 
+# for record in cursor: 
+#     print(record) 
+#     st.write(record)
 # st.write("example")
 # conn = sqlite3.connect('customers.db')
 # conn.row_factory = sqlite3.Row  
@@ -52,7 +80,7 @@ import streamlit as st
 # except Exception as e:
 #       st.write(e)
 
-conn = st.connection('mysql', type='sql')
-st.write(conn,"+++++++++++++++++++++++=")
-df = conn.query('SELECT * from users;', ttl=0)
-# st.write(df,"ffffffffffffffffffffffffff")
+# conn = st.connection('mysql', type='sql')
+# st.write(conn,"+++++++++++++++++++++++=")
+# df = conn.query('SELECT * from users;', ttl=0)
+# # st.write(df,"ffffffffffffffffffffffffff")
