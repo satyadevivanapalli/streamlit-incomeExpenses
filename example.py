@@ -7,8 +7,7 @@ import ssl
 # db = client.streamlit_authentication 
 dbName="example"
 collectionName = "Records"
-client = MongoClient("mongodb+srv://streamlitsatya:WxRuiFAU2qkA2Kea@cluster0.yzn3mx4.mongodb.net/", tls=True,tlsAllowInvalidCertificates=True
-)
+client = MongoClient("mongodb+srv://streamlitsatya:WxRuiFAU2qkA2Kea@cluster0.yzn3mx4.mongodb.net/", tls=True, tlsAllowInvalidCertificates=True)
 db = client[dbName]
 collection = db[collectionName]
 print(db)
