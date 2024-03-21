@@ -52,7 +52,7 @@ import streamlit as st
 # except Exception as e:
 #       st.write(e)
 
-conn = st.connection('authentication', type='sql', autocommit=True)
+conn = st.connection('authentication1', type='sql')
 st.write(conn,"+++++++++++++++++++++++=")
 df = conn.query('SELECT * from users;', ttl=0)
 # st.write(df,"ffffffffffffffffffffffffff")
