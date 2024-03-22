@@ -4,18 +4,27 @@ from pymongo import MongoClient
 import ssl
 import mysql.connector
 print("555555555555")
-mydb1 = mysql.connector.connect(
-    host= "sql.freedb.tech",
-    user= "freedb_satya",
-    password= "BPCtC?5Ye4PqyCr",
-    database= "freedb_steamlit_authentication"
-)
-print(11111)
-mycursor = mydb1.cursor()
-print(mycursor)
-mycursor.execute('select * from users1')
-data = mycursor.fetchall()
-st.write(data,"dddddddddd")
+conn = st.connection('mysql', type='sql')
+
+# Perform query.
+df = conn.query('SELECT * from users1;', ttl=600)
+
+# mydb1 = mysql.connector.connect(
+#     host= "sql.freedb.tech",
+#     user= "freedb_satya",
+#     password= "BPCtC?5Ye4PqyCr",
+#     database= "freedb_steamlit_authentication"
+# )
+# print(11111)
+# mycursor = mydb1.cursor()
+# print(mycursor)
+# mycursor.execute('select * from users1')
+# data = mycursor.fetchall()
+st.write(df,"dddddddddd", df.to_dict())
+for row in df.itertuples():
+    st.write({row.id})
+    # st.write(f"{row.id} has a {row.email}")
+
 # # CONNECTION_STRING = "mongodb+srv://admin:admin@satyacluster.y5zdczt.mongodb.net/streamlit_authentication?retryWrites=true&w=majority"
 # # client = MongoClient(CONNECTION_STRING)
 # # db = client.streamlit_authentication 
