@@ -5,7 +5,11 @@ import re
 import mysql.connector
 import time
 import bcrypt
-
+page_title = "Income and Expense Tracker"
+page_icon = ":money_with_wings:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
+layout = "centered"
+# --------------------------------------
+st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 # mydb = mysql.connector.connect(
 #     host= "127.0.0.1",
 #     user= "satya",
@@ -13,24 +17,33 @@ import bcrypt
 #     database= "streamlit",
 #     autocommit=True
 # )
-conn = st.connection('mysql', type='sql', autocommit=True)
-st.write(conn,"+++++++++++++++++++++++=")
-print(conn,"ccccccccccccc")
 # # Perform query.
 # df = conn.query('SELECT * from users;', ttl=0)
 # print(df,"ffffffffffffffffffffffffff", df.to_dict())
 # for row in df.to_dict():
 #     print(row,type(row))
 mydb = mysql.connector.connect(
-    host= "192.168.0.106",
-    user= "user",
-    password= "password",
-    database= "streamlit",
+    host= "sql.freedb.tech",
+    user= "freedb_satya",
+    password= "BPCtC?5Ye4PqyCr",
+    database= "freedb_steamlit_authentication",
     autocommit=True
 )
 mycursor = mydb.cursor(dictionary=True)
-    
+#     host = "sql.freedb.tech"
+# port = 3306
+# database = "freedb_steamlit_authentication"
+# username = "freedb_satya"
+# password = "BPCtC?5Ye4PqyCr"
+# conn = st.connection('mysql', type='sql')
 
+# Perform query.
+# df = conn.query('SELECT * from users1;', ttl=600)
+
+# def example():
+#     with conn.session as s:
+#         s.execute(text("CREATE TABLE TEXT (name text);"))
+#         print("table created")
 
 def fetch_users():
     """
@@ -41,17 +54,28 @@ def fetch_users():
     data = mycursor.fetchall()
     # #print(data)
     # st.write(data)
+    # data =conn.query('SELECT * from users;', ttl=600)
 
     return data
 def get_user_emails():
+    
     """
     Fetch User Emails
     :return List of user emails:
     """
     mycursor.execute('select * from users')
     users = mycursor.fetchall()
-    #print(users,"?????????------------------")
+
+    
+
+
+    # users = conn.query('SELECT * from users1;', ttl=600)
     emails = []
+    # # st.write(users,"dddddddddd", users.to_dict())
+    # for row in users.itertuples():
+    #     emails.append(row.email)
+
+    
 
     for user in users:
         emails.append(user['email'])
@@ -66,9 +90,12 @@ def get_usernames():
     """
     mycursor.execute('select * from users')
     users = mycursor.fetchall()
+    # users = conn.query('SELECT * from users;', ttl=600)
     usernames = []
     for user in users:
         usernames.append(user['userName'])
+    print(usernames,"JJJJJJJJJJJJJJJJJJJJ")
+    
     return usernames
 
 
@@ -81,11 +108,13 @@ def validate_email(email):
     pattern = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$" #tesQQ12@gmail.com
 
     if re.match(pattern, email):
+        print(pattern)
         return True
     return False
 
 
 def validate_username(username):
+    print("uuuuuuuuuuuuuuuuuuu")
     """
     Checks Validity of userName
     :param username:
@@ -102,54 +131,72 @@ def validate_username(username):
 def sign_up():
     try:
         with st.form('signup'):
-            st.subheader(':green[Sign Up]')
-            email = st.text_input(':blue[Email]', placeholder='Enter Your Email')
-            username = st.text_input(':blue[Username]', placeholder='Enter Your Username')
-            password1 = st.text_input(':blue[Password]', placeholder='Enter Your Password', type='password')
-            password2 = st.text_input(':blue[Confirm Password]', placeholder='Confirm Your Password', type='password')
-            btn1, bt2, btn3, btn4, btn5 = st.columns(5)
-            with btn3:
-                st.form_submit_button('Sign Up')
-            
-            if email:
-                if validate_email(email):
-                    if email not in get_user_emails():
-                        if validate_username(username):
-                            if username not in get_usernames():
-                                if len(username) >= 2:
-                                    if len(password1) >= 6:
-                                        if password1 == password2:
-                                            # Add User to DB
-                                            hashed_password = stauth.Hasher([password2]).generate()
-                                            # insert_user(email, username, hashed_password[0])
-                                            insert_stmt = (
-                                            "INSERT INTO users(username, email, password)" "VALUES (%s, %s, %s)")
-                                            data = (username, email, hashed_password[0])
-                                            #print(data,"?????????????????/")
-                                            mycursor.execute(insert_stmt, data)
-                                            mydb.commit()
-                                            st.success('Account created successfully!!')
-                                            st.balloons()
+            st.subheader('Sign Up')
+            email = st.text_input('Email', placeholder='Enter Your Email')
+            username = st.text_input('Username', placeholder='Enter Your Username')
+            password1 = st.text_input('Password', placeholder='Enter Your Password', type='password')
+            password2 = st.text_input('Confirm Password', placeholder='Confirm Your Password', type='password')
+            # btn1= st.columns(1)
+            # showError = False
+            # with btn1:
+            if st.form_submit_button('Sign Up'):
+        
+                if email:
+                    if validate_email(email):
+                        print(get_user_emails(),">>>>>>>>>>>>>>")
+                        if email not in get_user_emails():
+                            if username and validate_username(username):
+                                if username not in get_usernames():
+                                    if len(username) >= 2:
+                                        if len(password1) >= 6:
+                                            print(password1, password2,"PPPPPPPPPPPPPPP")
+                                            if password1 == password2:
+                                                # Add User to DB
+                                                hashed_password = stauth.Hasher([password2]).generate()
+                                                # insert_user(email, username, hashed_password[0])
+                                                # with conn.session as s:
+
+                                                insert_stmt = (
+                                                    "INSERT INTO users(username, email, password)" "VALUES (%s, %s, %s)")
+                                                data = (username, email, hashed_password[0])
+                                                print(data,"?????????????????/",insert_stmt)
+                                                # conn.query(insert_stmt, data)
+                                                    # cu.execute(insert_stmt, data)
+                                                    # s.commit()
+                                                mycursor.execute(insert_stmt, data)
+                                                mydb.commit()
+                                                    # s.execute(
+                                                    # "INSERT INTO parts (username, email, password) VALUES (:username, :email, :password);",
+                                                    # params=dict(username=username, email=email, password=hashed_password[0]),)
+                                                    # s.commit()
+
+                                                st.success('Account created successfully!!')
+                                                st.balloons()
+                                            else:
+                                                st.warning('Passwords Do Not Match')
                                         else:
-                                            st.warning('Passwords Do Not Match')
+                                            st.warning('Password is too Short')
                                     else:
-                                        st.warning('Password is too Short')
+                                        st.warning('Username Too short')
                                 else:
-                                    st.warning('Username Too short')
+                                    st.warning('Username Already Exists')
+
                             else:
-                                st.warning('Username Already Exists')
-
+                                st.warning('Invalid Username')
                         else:
-                            st.warning('Invalid Username')
+                            st.warning('Email Already exists!!')
                     else:
-                        st.warning('Email Already exists!!')
+                        st.warning('Invalid Email')
                 else:
-                    st.warning('Invalid Email')
-
+                    # showError = True
+                    st.warning("Please add all details")
+            # if showError:
+            #     st.error("Please add all details")
             # btn1, bt2, btn3, btn4, btn5 = st.columns(5)
 
             # with btn3:
             #     st.form_submit_button('Sign Up')
+            st.write('<a href="/" target="_self" style="color:white">Already have account?</a>', unsafe_allow_html=True)
     except Exception as e:
         st.error(e)
 
@@ -227,7 +274,6 @@ def updatePassword(email,password):
         mycursor.execute(sql, val)
 
         mydb.commit()
-        st.write(mycursor.rowcount)
 
         return True
     except Exception as e:
