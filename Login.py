@@ -20,6 +20,7 @@ import json
 import webbrowser
 
 import pandas as pd
+from sqlalchemy.sql import text
 
 
 # -------------- SETTINGS --------------
@@ -34,16 +35,30 @@ layout = "centered"
 # conn = st.connection('mysql', type='sql', autocommit=True)
 # st.write(conn,"+++++++++++++++++++++++=")
 
+# conn = st.connection('mysql', type='sql')
+
+# df = conn.query('SELECT * from users1;', ttl=600)
+# st.write(df,"dddddddddd", df.to_dict(),"LLLLLLLLLLLLLLLLLLLLLL")
 conn = st.connection('mysql', type='sql')
+with conn.session as s:
+    # s.execute('CREATE TABLE IF NOT EXISTS pet_owners (person TEXT, pet TEXT);')
+    # s.execute('DELETE FROM pet_owners;')
+    pet_owners = {'jerry': 'fish', 'barbara': 'cat', 'alex': 'puppy'}
+    for k in pet_owners:
+        a = 'INSERT INTO details (name) VALUES ("{fname}");'.format(fname=k)
 
-df = conn.query('SELECT * from users1;', ttl=600)
-st.write(df,"dddddddddd", df.to_dict(),"LLLLLLLLLLLLLLLLLLLLLL")
-
-# --- DROP DOWN VALUES FOR SELECTING THE PERIOD ---
-years = [datetime.today().year, datetime.today().year + 1]
-months = tuple(calendar.month_name[1:])
-with open('data.json', 'r') as file:
-    data = json.load(file)
+        s.execute(
+            text(a)
+        )
+        s.commit()
+        st.write("success", a)
+# conn1.query("INSERT INTO details (name) VALUES ('satya1')")
+# st.write("inserted")
+# # --- DROP DOWN VALUES FOR SELECTING THE PERIOD ---
+# years = [datetime.today().year, datetime.today().year + 1]
+# months = tuple(calendar.month_name[1:])
+# with open('data.json', 'r') as file:
+#     data = json.load(file)
 
 # st.markdown("""
 #     <style>
