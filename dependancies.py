@@ -30,6 +30,10 @@ mydb = mysql.connector.connect(
     autocommit=True
 )
 mycursor = mydb.cursor(dictionary=True)
+mycursor.execute('select * from users')
+data = mycursor.fetchall()
+st.write(mycursor,"////", data)
+
 #     host = "sql.freedb.tech"
 # port = 3306
 # database = "freedb_steamlit_authentication"

@@ -29,8 +29,10 @@ currency = "Rupees"
 page_title = "Income and Expense Tracker"
 page_icon = ":money_with_wings:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 layout = "centered"
-# --------------------------------------
+# # --------------------------------------
 # st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
+# conn = st.connection('mysql', type='sql', autocommit=True)
+# st.write(conn,"+++++++++++++++++++++++=")
 
 
 
@@ -62,11 +64,11 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 # Replace the chart with several elements:
 
 def resetPassowrd(userPwd, email):
-    with st.sidebar.form('reset_password'):
+    with st.sidebar.form('reset_password',clear_on_submit=False):
             st.subheader('Rest Password')
-            password = st.text_input('Current password', placeholder='Current password', type='password')
-            new_password = st.text_input('New password', placeholder='New password', type='password')
-            new_password_repeat = st.text_input('Repeat password', placeholder='Repeat password', type='password')
+            password = st.text_input('Current password', placeholder='Current password', type='password', key = 'current_password')
+            new_password = st.text_input('New password', placeholder='New password', type='password', key = 'new_password')
+            new_password_repeat = st.text_input('Repeat password', placeholder='Repeat password', type='password', key = 'repeat_password')
             
             
             if st.form_submit_button('Reset Password'):
@@ -84,6 +86,10 @@ def resetPassowrd(userPwd, email):
                         update = updatePassword(email,new_password)
                         if update:
                             st.success("Password updated successfully")
+                            st.write(st.session_state.current_password)
+                            st.session_state.current_password = ''
+                            # st.session_state['new_password'] = ''
+                            # st.session_state['repeat_password'] = ''
                     else:
                         st.warning('Password is too Short')
                 else:
@@ -168,9 +174,18 @@ try:
         credentials['usernames'][emails[index]] = {'name': usernames[index], 'password': passwords[index]}
 
     Authenticator = stauth.Authenticate(credentials, cookie_name='Streamlit', key='abcdef', cookie_expiry_days=4)
-    username, authentication_status, email = Authenticator.login('sidebar')
+    username, authentication_status, email = Authenticator.login('main')
     if not authentication_status:
-        st.sidebar.write("[Forgot Password](/Forgot_Password)")
+        c1, c2,c3,c4 = st.columns(4)
+        # c1, c2 = st.columns([.5,1])
+        # col1, col2 = st.beta_columns([.5,1])
+
+
+        # st.write("[Forgot Password](/Forgot_Password)")
+        with c1:
+            st.write('<a href="/Forgot_Password" target="_self" style="color: white">Forgot Password</a>', unsafe_allow_html=True)
+        with c2:
+            st.write('<a href="/Signup" target="_self" style="color: white">Create account</a>', unsafe_allow_html=True)
     
     # email, authentication_status, username = Authenticator.login(':green[Login]', 'main')
     info, info1 = st.columns(2)
@@ -231,6 +246,8 @@ try:
                 month = col1.selectbox("Select Month", months, key="months")
                 year = col2.selectbox("Select Year:", years, key="year")
                 if selected == "Data Entry":
+                    
+                        
                     # st.header(f"Data Entry in {currency}")
                     details = []
                     details = get_data_period(str(year) + "_" + str(month), email)
@@ -284,31 +301,34 @@ try:
                         submitted = False
                         submitted = st.form_submit_button("Update Entry") if (details and len(details.keys()) > 0) else st.form_submit_button("Add Entry")
                         if submitted:
-                            period = str(year) + "_" + str(month)
-                            incomes = {income: st.session_state[income] for income in incomes}
-                            expenses = {expense: st.session_state[expense] for expense in expenses}
+                            with st.spinner('Wait for it...'):
+                                st.write(st.session_state)
+                                period = str(year) + "_" + str(month)
+                                incomes = {income: st.session_state[income] for income in incomes}
+                                expenses = {expense: st.session_state[expense] for expense in expenses}
 
-                            if details: 
-                                updated = insert_period(period, incomes, expenses,comment, email, "update", details['id'])
-                                if updated:
-                                    with totalIncomeText.container():
-                                        totalIncome = st.session_state['Salary'] + st.session_state['Other Income']
-                                        text = 'Total Income: ' + f"{totalIncome:,}" + u'\u20B9'
-                                        st.write(text)
-                                    with totalExpensesText.container():                                        
-                                        totalExpenses = st.session_state['Rent'] + st.session_state['Groceries'] + st.session_state['Other Expenses'] + st.session_state['Savings']
-                                        expensestext = 'Total Expenses: ' + f"{totalExpenses:,}" + u'\u20B9'
-                                        st.write(expensestext)
-                                    with balanceText.container():
-                                        balanceT = 'Balance: ' + f"{(totalIncome - totalExpenses):,}" + u'\u20B9'
-                                        st.write(balanceT)
-                                    with commentText.container():
-                                        st.write("Comments: ", comment)
+                                if details: 
+                                    updated = insert_period(period, incomes, expenses,comment, email, "update", details['id'])
+                                    if updated:
+                                        with totalIncomeText.container():
+                                            totalIncome = st.session_state['Salary'] + st.session_state['Other Income']
+                                            text = 'Total Income: ' + f"{totalIncome:,}" + u'\u20B9'
+                                            st.write(text)
+                                        with totalExpensesText.container():                                        
+                                            totalExpenses = st.session_state['Rent'] + st.session_state['Groceries'] + st.session_state['Other Expenses'] + st.session_state['Savings']
+                                            expensestext = 'Total Expenses: ' + f"{totalExpenses:,}" + u'\u20B9'
+                                            st.write(expensestext)
+                                        with balanceText.container():
+                                            balanceT = 'Balance: ' + f"{(totalIncome - totalExpenses):,}" + u'\u20B9'
+                                            st.write(balanceT)
+                                        with commentText.container():
+                                            st.write("Comments: ", comment)
 
 
-                            else:
-                                insert_period(period, incomes, expenses,comment, email, "new",0)
-                            
+                                else:
+                                    insert_period(period, incomes, expenses,comment, email, "new",0)
+                                time.sleep(1)
+
                         else:
                             print("KKKKKKKKKKKKKKKKKKKK")
                 if selected == "Data Visualization":

@@ -8,6 +8,8 @@ import random
 import re
 
 import html
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 def convert_to_html_safe(text):
     return html.escape(text)
@@ -43,7 +45,38 @@ if forgot_password_form.form_submit_button('Submit' if 'Submit' not in fields el
             server.starttls()
             server.login("streamlitsatya@gmail.com", 'nevb ahzo ehby gcrt')
             msg = 'New Password: ' + password
-            server.sendmail('streamlitsatya@gmail.com',email,password)
+            password = msg
+            
+
+            message = MIMEMultipart("alternative")
+            message["Subject"] = "multipart test"
+            message["From"] = 'streamlitsatya@gmail.com'
+            message["To"] = email
+#             html = """\
+# <html>
+#   <body>
+#     <p>Hi,<br>
+#       Please find New password:</p>
+#     <p><a href="https://blog.mailtrap.io/2018/09/27/cloud-or-local-smtp-server">SMTP Server for Testing: Cloud-based or Local?</a></p>
+#     <p> Feel free to <strong>let us</strong> know what content would be useful for you!</p>
+#   </body>
+# </html>
+# """       
+            html = """\
+<html>
+  <body>
+    <p>Hi,<br><br><br>
+""" + password + """\
+
+  </body>
+</html>
+"""
+            part2 = MIMEText(html, "html")
+            message.attach(part2)
+            send = server.sendmail('streamlitsatya@gmail.com',email,message.as_string())
+            st.success("Password send to your email account. Please verify")
+
+
     else:
         st.error("Please enter valid email")
 
