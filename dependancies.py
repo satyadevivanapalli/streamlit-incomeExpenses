@@ -10,6 +10,7 @@ page_icon = ":money_with_wings:"  # emojis: https://www.webfx.com/tools/emoji-ch
 layout = "centered"
 # --------------------------------------
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
+st.write("OK")
 # mydb = mysql.connector.connect(
 #     host= "127.0.0.1",
 #     user= "satya",
@@ -28,7 +29,7 @@ mydb = mysql.connector.connect(
     password= "BPCtC?5Ye4PqyCr",
     database= "freedb_steamlit_authentication",
     autocommit=True,
-    connect_timeout=1000
+    connect_timeout=10000
 )
 mycursor = mydb.cursor(dictionary=True)
 mycursor.execute('select * from users')
