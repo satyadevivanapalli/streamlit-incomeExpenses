@@ -36,6 +36,7 @@ mycursor.execute('select * from users')
 data = mycursor.fetchall()
 st.write(mycursor,"////", data)
 
+
 #     host = "sql.freedb.tech"
 # port = 3306
 # database = "freedb_steamlit_authentication"
@@ -56,8 +57,11 @@ def fetch_users():
     Fetch Users
     :return Dictionary of Users:
     """
+    mycursor = mydb.cursor(dictionary=True)
+
     mycursor.execute('select * from users')
     data = mycursor.fetchall()
+    mycursor.close()
     # #print(data)
     # st.write(data)
     # data =conn.query('SELECT * from users;', ttl=600)
@@ -69,9 +73,11 @@ def get_user_emails():
     Fetch User Emails
     :return List of user emails:
     """
+    mycursor = mydb.cursor(dictionary=True)
+
     mycursor.execute('select * from users')
     users = mycursor.fetchall()
-
+    mycursor.close()
     
 
 
@@ -94,6 +100,8 @@ def get_usernames():
     Fetch Usernames
     :return List of user usernames:
     """
+    mycursor = mydb.cursor(dictionary=True)
+
     mycursor.execute('select * from users')
     users = mycursor.fetchall()
     # users = conn.query('SELECT * from users;', ttl=600)
@@ -101,7 +109,7 @@ def get_usernames():
     for user in users:
         usernames.append(user['userName'])
     print(usernames,"JJJJJJJJJJJJJJJJJJJJ")
-    
+    mycursor.close()
     return usernames
 
 
@@ -169,8 +177,11 @@ def sign_up():
                                                 # conn.query(insert_stmt, data)
                                                     # cu.execute(insert_stmt, data)
                                                     # s.commit()
+                                                mycursor = mydb.cursor(dictionary=True)
+
                                                 mycursor.execute(insert_stmt, data)
                                                 mydb.commit()
+                                                mycursor.close()
                                                     # s.execute(
                                                     # "INSERT INTO parts (username, email, password) VALUES (:username, :email, :password);",
                                                     # params=dict(username=username, email=email, password=hashed_password[0]),)
@@ -212,6 +223,7 @@ def insert_period(period, incomes, expenses, comment, email,type, id):
     
 
     """Returns the report on a successful creation, otherwise raises an error"""
+    mycursor = mydb.cursor(dictionary=True)
 
     sql = "SELECT * FROM users WHERE email = %s;"
     adr = (email,)
@@ -227,6 +239,8 @@ def insert_period(period, incomes, expenses, comment, email,type, id):
         data = (incomes['Salary'], incomes['Other Income'], expenses['Rent'], expenses['Groceries'], expenses['Other Expenses'], expenses['Savings'], period, userId, comment )
         mycursor.execute(insert_stmt, data)
         mydb.commit()
+        mycursor.close()
+
         if data:    
             st.success("Data saved!")
     elif type == 'update':
@@ -237,6 +251,7 @@ def insert_period(period, incomes, expenses, comment, email,type, id):
         mycursor.execute(sql, val)
 
         mydb.commit()
+        mycursor.close()
 
         return True
 
@@ -248,6 +263,7 @@ def insert_period(period, incomes, expenses, comment, email,type, id):
 def get_data_period(period, username):
     #print(period, username)
     try:
+        mycursor = mydb.cursor(dictionary=True)
         sql = "SELECT * FROM users WHERE email = %s;"
         adr = (username,)
         mycursor.execute(sql, adr)
@@ -258,6 +274,7 @@ def get_data_period(period, username):
         adr = (userId,period)
         mycursor.execute(sql, adr)
         data = mycursor.fetchone()
+        mycursor.close()
         #print(data,"ddddddddddddddddddddddddddddd")
         return data
     except Exception as e:
@@ -268,6 +285,7 @@ def get_data_period(period, username):
 def updatePassword(email,password):
     #print(email,"EEEEEEEEEEEEEEEEEEEEEEEEEEe")
     try:
+        mycursor = mydb.cursor(dictionary=True)
         newPassword = stauth.Hasher([password]).generate()
         # st.write(newPassword[0], password,bcrypt.checkpw(password.encode(),newPassword[0].encode()))
         # h = '$2b$12$qKUPeDdgGPwpXdURs9T8BeuNChgzl3oK92z7zrjm0qoklux3YzfTW'
@@ -278,7 +296,7 @@ def updatePassword(email,password):
         val = (newPassword[0], email)
 
         mycursor.execute(sql, val)
-
+        mycursor.close()
         mydb.commit()
 
         return True
