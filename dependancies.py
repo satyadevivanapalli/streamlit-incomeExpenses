@@ -27,7 +27,8 @@ mydb = mysql.connector.connect(
     user= "freedb_satya",
     password= "BPCtC?5Ye4PqyCr",
     database= "freedb_steamlit_authentication",
-    autocommit=True
+    autocommit=True,
+    connect_timeout=1000
 )
 mycursor = mydb.cursor(dictionary=True)
 mycursor.execute('select * from users')
