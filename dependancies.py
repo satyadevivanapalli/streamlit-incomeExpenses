@@ -23,13 +23,20 @@ st.write("OK")
 # print(df,"ffffffffffffffffffffffffff", df.to_dict())
 # for row in df.to_dict():
 #     print(row,type(row))
+conn = st.connection('mysql', type='sql')
+
+df = conn.query('SELECT * from users1;', ttl=600)
+st.write(df,"dddddddddd", df.to_dict())
+
 mydb = mysql.connector.connect(
     host= "sql.freedb.tech",
     user= "freedb_satya",
     password= "BPCtC?5Ye4PqyCr",
     database= "freedb_steamlit_authentication",
     autocommit=True,
-    connect_timeout=10000
+    connect_timeout=10000,
+    port = 3306
+
 )
 mycursor = mydb.cursor(dictionary=True)
 mycursor.execute('select * from users')

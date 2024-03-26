@@ -34,7 +34,10 @@ layout = "centered"
 # conn = st.connection('mysql', type='sql', autocommit=True)
 # st.write(conn,"+++++++++++++++++++++++=")
 
+conn = st.connection('mysql', type='sql')
 
+df = conn.query('SELECT * from users1;', ttl=600)
+st.write(df,"dddddddddd", df.to_dict(),"LLLLLLLLLLLLLLLLLLLLLL")
 
 # --- DROP DOWN VALUES FOR SELECTING THE PERIOD ---
 years = [datetime.today().year, datetime.today().year + 1]
